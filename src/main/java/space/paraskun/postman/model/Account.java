@@ -9,6 +9,7 @@ import java.util.Map;
 
 @RedisHash("accounts")
 @AllArgsConstructor @Builder @ToString
+@Getter
 public class Account {
     @Id private final String email;
     private final String spreadsheetId;
@@ -23,7 +24,19 @@ public class Account {
         return templates.size();
     }
 
-    @AllArgsConstructor
+    public AbstractTemplate saveTemplate(AbstractTemplate template) {
+        if (!templates.containsKey(template.title) && templates.size() == 3)
+            return null;
+
+        templates.put(template.title, template);
+        return template;
+    }
+
+    public void removeTemplate(String title) {
+        this.templates.remove(title);
+    }
+
+    @AllArgsConstructor @Getter
     public static class Credential {
         private String access;
         private final String refresh;
