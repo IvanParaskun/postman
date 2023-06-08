@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RedisHash("accounts")
-@AllArgsConstructor @Builder @ToString
-@Getter
+@AllArgsConstructor
+@Builder @ToString @Getter
 public class Account {
     @Id private final String email;
     private final String spreadsheetId;
