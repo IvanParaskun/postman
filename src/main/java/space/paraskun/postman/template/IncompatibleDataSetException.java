@@ -1,4 +1,4 @@
-package space.paraskun.postman.model.exception;
+package space.paraskun.postman.template;
 
 public class IncompatibleDataSetException extends Exception {
     public IncompatibleDataSetException(String message) {

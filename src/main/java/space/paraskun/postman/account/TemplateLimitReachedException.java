@@ -1,4 +1,4 @@
-package space.paraskun.postman.model.exception;
+package space.paraskun.postman.account;
 
 public class TemplateLimitReachedException extends Exception {
     public TemplateLimitReachedException(String message) {
