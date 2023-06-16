@@ -3,5 +3,5 @@
 mvnw.cmd
 mvnw
 /target
-/src/main/resources/application.properties
+/src/main/resources
 
