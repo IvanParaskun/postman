@@ -1,9 +1,11 @@
 package space.paraskun.postman;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import space.paraskun.postman.model.Account;
+import space.paraskun.postman.model.exception.TemplateLimitReachedException;
 import space.paraskun.postman.templates.DefaultTemplate;
 
 @SpringBootTest
@@ -21,23 +23,56 @@ public class ModelTests {
 
     @Test
     public void refreshCredential() {
-        account.getCredential().refreshAccess("refreshed", 3600);
-        assert account.getCredential().getAccess().equals("refreshed");
+        account.getCredential().refresh("refreshed", 3600);
+        assert account.getCredential().getAccessToken().equals("refreshed");
     }
 
     @Test
     public void saveTemplateLimitReached() {
-        account.saveTemplate(new DefaultTemplate("Template 1"));
-        account.saveTemplate(new DefaultTemplate("Template 2"));
-        account.saveTemplate(new DefaultTemplate("Template 3"));
-        assert account.saveTemplate(new DefaultTemplate("Template 4")) == null;
-        assert account.templatesCount() == 3;
+        Assertions.assertDoesNotThrow(() -> {
+            account.saveTemplate(new DefaultTemplate("Template 1"));
+            account.saveTemplate(new DefaultTemplate("Template 2"));
+            account.saveTemplate(new DefaultTemplate("Template 3"));
+        });
+
+        Assertions.assertThrows(TemplateLimitReachedException.class, () -> {
+            account.saveTemplate(new DefaultTemplate("Template 4"));
+        });
+
+        assert account.getTemplatesCount() == 3;
+        account.removeTemplate("Template 1");
     }
 
     @Test
     public void removeTemplate() {
-        account.saveTemplate(new DefaultTemplate("To remove"));
-        account.removeTemplate("To remove");
-        assert account.template("To remove") == null;
+        Assertions.assertDoesNotThrow(() -> {
+            account.saveTemplate(new DefaultTemplate("To remove"));
+            account.removeTemplate("To remove");
+            assert account.getTemplate("To remove") == null;
+        });
+    }
+
+    @Test
+    public void credentialExpirationTestExpired() throws InterruptedException {
+        Account account = Account.builder()
+                .email("test@domain.com")
+                .spreadsheetId("sheetId")
+                .credential(new Account.Credential("access", "refresh", 2))
+                .build();
+
+        Thread.sleep(3000);
+        assert !account.getCredential().isAccessValid();
+    }
+
+    @Test
+    public void credentialExpirationTestNotExpired() throws InterruptedException {
+        Account account = Account.builder()
+                .email("test@domain.com")
+                .spreadsheetId("sheetId")
+                .credential(new Account.Credential("access", "refresh", 4))
+                .build();
+
+        Thread.sleep(3000);
+        assert account.getCredential().isAccessValid();
     }
 }
