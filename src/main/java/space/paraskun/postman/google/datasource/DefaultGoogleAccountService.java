@@ -1,16 +1,22 @@
-package space.paraskun.postman.datasource.google;
+package space.paraskun.postman.google.datasource;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import space.paraskun.postman.account.google.GoogleAccount;
-import space.paraskun.postman.auth.google.GoogleAuthService;
+import space.paraskun.postman.google.model.GoogleAccount;
+import space.paraskun.postman.google.auth.AuthenticationService;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class DefaultGoogleAccountService implements GoogleAccountService {
 	private final GoogleAccountRepository googleAccountRepository;
-	private final GoogleAuthService googleAuthService;
+	private final AuthenticationService googleAuthService;
+
+	@PostConstruct
+	public void postConstruct() {
+		this.googleAuthService.setAccountService(this);
+	}
 
 	@Override
 	public GoogleAccount findById(String id) {
@@ -38,6 +44,11 @@ public class DefaultGoogleAccountService implements GoogleAccountService {
 	@Override
 	public GoogleAccount save(GoogleAccount googleAccount) {
 		return googleAccountRepository.save(googleAccount);
+	}
+
+	@Override
+	public boolean exists(String email) {
+		return googleAccountRepository.existsByEmail(email);
 	}
 
 	@Override

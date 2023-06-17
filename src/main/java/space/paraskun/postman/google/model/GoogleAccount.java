@@ -1,5 +1,6 @@
-package space.paraskun.postman.account.google;
+package space.paraskun.postman.google.model;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import lombok.Getter;
 import org.springframework.data.annotation.PersistenceCreator;
 import space.paraskun.postman.account.AbstractAccount;
@@ -73,15 +74,17 @@ public class GoogleAccount extends AbstractAccount {
 
 		/**
 		 * Replace all credential fields (e.g. reauthenticate)
-		 * @param accessToken Initial access token, received from Google.
-		 * @param refreshToken Initial refresh token, received from Google.
-		 * @param expiresAt Initial date of access expiration.
+		 * @param credential New credentials
 		 */
-		public void replaceAll(String accessToken, String refreshToken, Date expiresAt) {
-			assert accessToken != null && refreshToken != null;
-			this.accessToken = accessToken;
-			this.refreshToken = refreshToken;
-			this.expiresAt = expiresAt;
+		public void replaceAll(Credential credential) {
+			assert credential != null;
+			accessToken = credential.getAccessToken();
+			refreshToken = credential.getRefreshToken();
+			expiresAt = credential.getExpiresAt();
+		}
+
+		public GoogleCredential googleCredential() {
+			return new GoogleCredential().setAccessToken(accessToken);
 		}
 	}
 }

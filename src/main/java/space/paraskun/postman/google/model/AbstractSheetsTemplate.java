@@ -1,4 +1,4 @@
-package space.paraskun.postman.template.google;
+package space.paraskun.postman.google.model;
 
 import space.paraskun.postman.template.AbstractTemplate;
 
