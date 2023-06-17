@@ -1,4 +1,4 @@
-package space.paraskun.postman.template;
+package space.paraskun.postman.messaging;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -9,5 +9,4 @@ public class PostmanApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PostmanApplication.class, args);
 	}
-
 }

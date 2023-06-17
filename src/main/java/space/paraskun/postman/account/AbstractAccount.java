@@ -4,25 +4,25 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.redis.core.RedisHash;
-import space.paraskun.postman.template.AbstractTemplate;
+import space.paraskun.postman.template.AbstractMessageTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
 @RedisHash("accounts") @Getter
 public abstract class AbstractAccount {
 	@Id private String id;
-	private final Map<String, AbstractTemplate> templates;
+	private final Map<String, AbstractMessageTemplate> templates;
 
 	@PersistenceCreator
-	public AbstractAccount(Map<String, AbstractTemplate> templates) {
+	public AbstractAccount(Map<String, AbstractMessageTemplate> templates) {
 		this.templates = templates == null ? new HashMap<>() : templates;
 	}
 
-	public AbstractTemplate getTemplate(String title) {
+	public AbstractMessageTemplate getTemplate(String title) {
 		return templates.get(title);
 	}
 
-	public AbstractTemplate saveTemplate(AbstractTemplate template) throws TemplateLimitReachedException {
+	public AbstractMessageTemplate saveTemplate(AbstractMessageTemplate template) throws TemplateLimitReachedException {
 		if (!templates.containsKey(template.getTitle()) && templates.size() == 3)
 			throw new TemplateLimitReachedException("Template limit reached.");
 
