@@ -1,8 +1,8 @@
 package space.paraskun.postman.account;
 
+import java.util.Optional;
+
 public interface AccountService {
-	boolean exists(String id);
-	AbstractAccount findById(String id);
-	AbstractAccount save(AbstractAccount account);
-	void delete(String id);
+	Optional<? extends AbstractAccount> findById(String id);
+	void deleteById(String id);
 }
