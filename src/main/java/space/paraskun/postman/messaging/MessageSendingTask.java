@@ -2,12 +2,12 @@ package space.paraskun.postman.messaging;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import space.paraskun.postman.account.AbstractAccount;
+import space.paraskun.postman.account.Account;
 import java.util.List;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
-public class MessageSendingTask<T extends AbstractAccount> extends Thread {
+public class MessageSendingTask<T extends Account> extends Thread {
 	private final T account;
 	private final List<Message> messages;
 	private final MessageSender<T> messageSender;

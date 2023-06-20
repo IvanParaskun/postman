@@ -1,8 +1,8 @@
 package space.paraskun.postman.security;
 
-import space.paraskun.postman.account.AbstractAccount;
+import space.paraskun.postman.account.Account;
 
 public interface AuthenticationConsumer {
-	void onAuthenticationSuccess(AbstractAccount account, Object... params);
-	void onAuthenticationFailure(AuthenticationException exception);
+	void onAuthenticationSuccess(Object state, Account<? extends Credential> account);
+	void onAuthenticationFailure(Object state, AuthenticationException exception);
 }
