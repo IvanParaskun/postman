@@ -4,14 +4,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.redis.core.RedisHash;
 import space.paraskun.postman.security.Credential;
-import space.paraskun.postman.security.CredentialHolder;
 import space.paraskun.postman.template.AbstractMessageTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RedisHash("accounts")
-public class Account<T extends Credential> implements CredentialHolder<T> {
+public class Account<T extends Credential> {
 	@Id private String id;
 	private final T credential;
 	private final Map<String, AbstractMessageTemplate> templates;
@@ -30,9 +29,8 @@ public class Account<T extends Credential> implements CredentialHolder<T> {
 		this.templates = templates == null ? new HashMap<>() : templates;
 	}
 
-	@Override
 	public T getCredential() {
-		return this.credential;
+		return credential;
 	}
 
 	public List<AbstractMessageTemplate> listTemplates() {

@@ -1,5 +1,14 @@
 package space.paraskun.postman.security;
 
-public interface Credential {
-	void reload(Credential credential);
+import lombok.Getter;
+
+@Getter
+public abstract class Credential {
+	private String identifier;
+
+	abstract public void reload(Credential credential);
+
+	protected void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 }
