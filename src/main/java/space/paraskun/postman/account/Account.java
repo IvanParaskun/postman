@@ -1,5 +1,6 @@
 package space.paraskun.postman.account;
 
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.redis.core.RedisHash;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RedisHash("accounts")
+@RedisHash("accounts") @ToString
 public class Account<T extends Credential> {
 	@Id private String id;
 	private final T credential;

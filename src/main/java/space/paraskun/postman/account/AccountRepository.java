@@ -6,5 +6,5 @@ import space.paraskun.postman.security.Credential;
 
 @Repository
 public interface AccountRepository<T extends Credential> extends CrudRepository<Account<T>, String> {
-	Account<T> findAccountByCredentialIdentifier(String identifier);
+	Account<T> findAccountByCredentialUniqueField(Object uniqueField);
 }
