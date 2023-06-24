@@ -6,4 +6,8 @@ public class OAuthException extends AuthenticationException {
 	public OAuthException(String message) {
 		super(message);
 	}
+
+	public OAuthException() {
+		super();
+	}
 }

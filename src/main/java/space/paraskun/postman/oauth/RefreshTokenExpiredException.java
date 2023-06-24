@@ -4,4 +4,8 @@ public class RefreshTokenExpiredException extends OAuthException {
 	public RefreshTokenExpiredException(String message) {
 		super(message);
 	}
+
+	public RefreshTokenExpiredException() {
+		super();
+	}
 }

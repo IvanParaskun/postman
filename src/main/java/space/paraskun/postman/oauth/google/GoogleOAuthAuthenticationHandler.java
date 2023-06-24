@@ -1,5 +1,7 @@
 package space.paraskun.postman.oauth.google;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,8 @@ import space.paraskun.postman.security.SessionExpiredException;
 @RequestMapping
 @RequiredArgsConstructor
 public class GoogleOAuthAuthenticationHandler {
+	public static String REDIRECT_URL;
+	private final GoogleClientSecrets googleClientSecrets;
 	private final AuthenticationService<OAuthCredential> authenticationService;
 
 	@GetMapping("/")
@@ -21,9 +25,14 @@ public class GoogleOAuthAuthenticationHandler {
 		try {
 			AbstractAuthenticationFlow<OAuthCredential> flow = authenticationService.restore(state);
 			flow.authenticate(code);
-			return "redirect:" + flow.getData().getRedirect().getUrl();
+			return "redirect:" + flow.getSession().getAuthenticationConsumer().getRedirectUrl();
 		} catch (SessionExpiredException e) {
 			return "Authentication timeout";
 		}
+	}
+
+	@PostConstruct
+	public void postConstruct() {
+		REDIRECT_URL = googleClientSecrets.getDetails().getRedirectUris().get(0);
 	}
 }
