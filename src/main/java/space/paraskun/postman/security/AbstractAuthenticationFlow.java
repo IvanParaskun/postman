@@ -1,18 +1,18 @@
 package space.paraskun.postman.security;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
-@Getter @RequiredArgsConstructor
+@Getter
 @Component @Scope("prototype")
 public abstract class AbstractAuthenticationFlow<T extends Credential> {
-	private final AuthenticationSessionRepository repository;
-	private AuthenticationSession session;
+	private AuthenticationSessionRepository repository;
+	protected AuthenticationSession session;
 
-	public abstract String getAuthenticationUrl();
+	public abstract String getAuthenticationUrl(Object state);
 	public abstract void authenticate(String... data);
 
 	protected AbstractAuthenticationFlow<T> create(Object state, AuthenticationConsumer consumer) {
@@ -36,5 +36,10 @@ public abstract class AbstractAuthenticationFlow<T extends Credential> {
 
 		this.session = optional.get();
 		return this;
+	}
+
+	@Autowired
+	public void setRepository(AuthenticationSessionRepository repository) {
+		this.repository = repository;
 	}
 }

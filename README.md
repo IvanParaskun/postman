@@ -33,8 +33,8 @@ When client creates new AuthenticationFlow, application persists its current sta
 `AuthorizationServer` needs to process authentication data, it restores AuthenticationFlow using that session.
 
 `AuthenticationSession` has 5 minutes time to live property. It means, that client has 5 minutes to authenticate, before
-the session is deleted. If client tries to authenticate after session expiration time, `onAuthenticationFailure()`
-method will be called with `SessionExpiredException` as property value.
+the session is deleted. If client tries to authenticate after session expiration time, `SessionExpiredException` will be
+thrown.
 
 ### AuthenticationConsumer
 Client oriented part of application (e.g. Telegram Bot, WebApp client endpoint) can implement `AuthenticationConsumer`
