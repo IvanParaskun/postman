@@ -9,14 +9,11 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService<T extends Credential> {
 	private final AbstractAuthenticationFlow<T> flow;
 
-	public AbstractAuthenticationFlow<T> create(Object state, AuthenticationConsumer authenticationConsumer) {
-		if (state == null || authenticationConsumer == null)
-			throw new NullPointerException();
-
+	public AbstractAuthenticationFlow<T> create(String state, AuthenticationConsumer authenticationConsumer) {
 		return flow.create(state, authenticationConsumer);
 	}
 
-	public AbstractAuthenticationFlow<T> restore(Object state) throws SessionExpiredException {
+	public AbstractAuthenticationFlow<T> restore(String state) throws SessionExpiredException {
 		return flow.restore(state);
 	}
 }

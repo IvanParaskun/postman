@@ -12,7 +12,7 @@ AuthenticationService - facade class for security package. It has two simple met
 
 ### AbstractAuthenticationFlow
 AuthenticationFlow controls the process of authentication. Each authentication method consists of next steps:
-1. Client obtains AuthorizationServer URL.
+1. Client obtains authentication url.
 2. After following obtained link, client enters credentials and AuthorizationServer redirects it to handler endpoint of
 the server.
 3. At this part of authentication, application tries to retrieve necessary information. If all information retrieved, it 
@@ -39,9 +39,4 @@ thrown.
 ### AuthenticationConsumer
 Client oriented part of application (e.g. Telegram Bot, WebApp client endpoint) can implement `AuthenticationConsumer`
 and be used as result endpoint for authentication flow.
-
-### Credential
-Each account depends on some credential type, which presents one authentication method. Credential interface provides
-one method `getUniqueField()`, which returns unique field of credential (e.g. email for OAuth2, phone number for
-Phone authentication).
 

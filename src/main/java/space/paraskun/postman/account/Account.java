@@ -4,6 +4,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 import space.paraskun.postman.security.Credential;
 import space.paraskun.postman.template.AbstractMessageTemplate;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 @RedisHash("accounts") @ToString
 public class Account<T extends Credential> {
-	@Id private String id;
+	private @Id String id;
 	private final T credential;
 	private final Map<String, AbstractMessageTemplate> templates;
 

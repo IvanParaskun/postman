@@ -1,25 +1,20 @@
 package space.paraskun.postman.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import space.paraskun.postman.account.Account;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Component
-public class LoggingAuthenticationConsumer implements AuthenticationConsumer {
-    private final Logger logger = Logger.getLogger("security");
-
+@RequiredArgsConstructor
+public class ConsoleAuthenticationConsumer implements AuthenticationConsumer {
     @Override
     public void onAuthenticationSuccess(Object state, Account<? extends Credential> account) {
-        logger.log(Level.FINE, String.format("Authentication success.\nState: %s\nAccount: %s", state, account));
+        System.out.printf("Authentication success:\n\tState: %s\n\tAccount: %s\n\n", state, account);
     }
 
     @Override
     public void onAuthenticationFailure(Object state, AuthenticationException exception) {
-        logger.log(
-                Level.WARNING,
-                String.format("Authentication failed.\nState: %s\nCause: %s", state, exception.toString())
-        );
+        System.out.printf("Authentication failed:\n\tState: %s\n\tCause: %s\n\n", state, exception.toString());
     }
 
     @Override

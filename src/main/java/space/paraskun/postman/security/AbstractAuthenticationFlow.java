@@ -1,34 +1,37 @@
 package space.paraskun.postman.security;
 
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
-@Getter
 @Component @Scope("prototype")
 public abstract class AbstractAuthenticationFlow<T extends Credential> {
 	private AuthenticationSessionRepository repository;
-	protected AuthenticationSession session;
+	private AuthenticationSession session;
 
-	public abstract String getAuthenticationUrl(Object state);
+	public abstract String getAuthenticationUrl();
 	public abstract void authenticate(String... data);
 
-	protected AbstractAuthenticationFlow<T> create(Object state, AuthenticationConsumer consumer) {
+	public String getState() {
+		return this.session.getState();
+	}
+
+	public AuthenticationConsumer getAuthenticationConsumer() {
+		return this.session.getAuthenticationConsumer();
+	}
+
+	protected AbstractAuthenticationFlow<T> create(String state, AuthenticationConsumer consumer) {
 		this.session = new AuthenticationSession(state, consumer);
-		this.persist();
+		return this.persist();
+	}
+
+	private AbstractAuthenticationFlow<T> persist() {
+		repository.save(this.session);
 		return this;
 	}
 
-	private void persist() {
-		if (this.session == null)
-			throw new NullPointerException();
-
-		repository.save(this.session);
-	}
-
-	protected AbstractAuthenticationFlow<T> restore(Object state) throws SessionExpiredException {
+	protected AbstractAuthenticationFlow<T> restore(String state) throws SessionExpiredException {
 		Optional<AuthenticationSession> optional = repository.findById(state);
 
 		if (optional.isEmpty())
