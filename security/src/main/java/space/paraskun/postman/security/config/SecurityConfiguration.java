@@ -1,0 +1,20 @@
+package space.paraskun.postman.security.config;
+
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SecurityConfiguration implements ApplicationContextAware {
+    private static ApplicationContext applicationContext;
+
+    public static <T> T getBean(Class<T> type) {
+        return applicationContext.getBean(type);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        SecurityConfiguration.applicationContext = applicationContext;
+    }
+}
