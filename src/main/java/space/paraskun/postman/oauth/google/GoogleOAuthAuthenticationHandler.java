@@ -1,12 +1,11 @@
 package space.paraskun.postman.oauth.google;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import jakarta.annotation.PostConstruct;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import space.paraskun.postman.security.AuthenticationService;
 import space.paraskun.postman.security.AbstractAuthenticationFlow;
 import space.paraskun.postman.oauth.OAuthCredential;
@@ -16,23 +15,17 @@ import space.paraskun.postman.security.SessionExpiredException;
 @RequestMapping
 @RequiredArgsConstructor
 public class GoogleOAuthAuthenticationHandler {
-	public static String REDIRECT_URL;
-	private final GoogleClientSecrets googleClientSecrets;
+	public static String REDIRECT_URL = "http://localhost:8080/login/oauth2/code/google";
 	private final AuthenticationService<OAuthCredential> authenticationService;
 
-	@GetMapping("/")
-	public String onResponse(@PathVariable("code") String code, @PathVariable("state") Object state) {
+	@GetMapping("/login/oauth2/code/google")
+	public ModelAndView onResponse(@PathParam("code") String code, @PathParam("state") String state) {
 		try {
 			AbstractAuthenticationFlow<OAuthCredential> flow = authenticationService.restore(state);
 			flow.authenticate(code);
-			return "redirect:" + flow.getSession().getAuthenticationConsumer().getRedirectUrl();
+			return new ModelAndView("redirect:" + flow.getAuthenticationConsumer().getRedirectUrl());
 		} catch (SessionExpiredException e) {
-			return "Authentication timeout";
+			return new ModelAndView("redirect:https://google.com");
 		}
-	}
-
-	@PostConstruct
-	public void postConstruct() {
-		REDIRECT_URL = googleClientSecrets.getDetails().getRedirectUris().get(0);
 	}
 }

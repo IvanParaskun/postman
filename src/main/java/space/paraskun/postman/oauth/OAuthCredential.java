@@ -2,6 +2,10 @@ package space.paraskun.postman.oauth;
 
 import space.paraskun.postman.security.Credential;
 
-public interface OAuthCredential extends Credential {
-	String getAccessToken() throws OAuthException;
+public abstract class OAuthCredential extends Credential {
+	public abstract String getAccessToken() throws OAuthException;
+
+	public OAuthCredential(String identifier) {
+		super(identifier);
+	}
 }
