@@ -20,7 +20,8 @@
 
 	<modules>
 		<module>security</module>
-	</modules>
+        <module>mailing</module>
+    </modules>
 
 	<properties>
 		<java.version>17</java.version>
