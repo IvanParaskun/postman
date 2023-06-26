@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import space.paraskun.postman.mailing.consumer.MailingProgressConsumer;
 import space.paraskun.postman.mailing.model.MailingProgress;
 import space.paraskun.postman.mailing.provider.MailingProvider;
-import space.paraskun.postman.mailing.provider.ProviderException;
 import space.paraskun.postman.security.model.Credential;
 import java.util.List;
 import java.util.Map;
@@ -54,13 +53,13 @@ public class MailingTask<T extends Credential> implements Runnable {
         int goal = data.size();
 
         try {
-            progressConsumer.onProgress(state, new MailingProgress(state, goal, current));
+            progressConsumer.onProgress(state, new MailingProgress(goal, current));
 
             for (Map<Object, Object> d: data) {
                 provider.send(credential, template.toMessage(d));
-                progressConsumer.onProgress(state, new MailingProgress(state, goal, ++current));
+                progressConsumer.onProgress(state, new MailingProgress(goal, ++current));
             }
-        } catch (ProviderException | IncompatibleDataException e) {
+        } catch (Throwable e) {
             progressConsumer.onFail(state, e);
         }
     }
