@@ -21,6 +21,8 @@
 	<modules>
 		<module>security</module>
         <module>mailing</module>
+        <module>storage</module>
+        <module>telegram-client</module>
     </modules>
 
 	<properties>
@@ -93,6 +95,38 @@
 				<groupId>com.google.apis</groupId>
 				<artifactId>google-api-services-oauth2</artifactId>
 				<version>v2-rev157-1.25.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.google.api-client</groupId>
+						<artifactId>google-api-client</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.google.http-client</groupId>
+						<artifactId>google-http-client-gson</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.apis</groupId>
+				<artifactId>google-api-services-sheets</artifactId>
+				<version>v4-rev612-1.25.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.google.api-client</groupId>
+						<artifactId>google-api-client</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>com.google.http-client</groupId>
+						<artifactId>google-http-client-gson</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.apis</groupId>
+				<artifactId>google-api-services-drive</artifactId>
+				<version>v3-rev197-1.25.0</version>
 				<exclusions>
 					<exclusion>
 						<groupId>com.google.api-client</groupId>

@@ -2,7 +2,6 @@ package space.paraskun.postman.mailing;
 
 import lombok.Getter;
 import space.paraskun.postman.mailing.model.Message;
-
 import java.util.Map;
 
 @Getter

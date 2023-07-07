@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import space.paraskun.postman.security.AbstractAuthenticationFlow;
 import space.paraskun.postman.security.AuthenticationException;
-import space.paraskun.postman.security.model.CredentialHolder;
-import space.paraskun.postman.security.model.CredentialHolderFactory;
 import space.paraskun.postman.security.model.CredentialHolderRepository;
 import space.paraskun.postman.security.oauth2.IncompleteSetOfScopesException;
 import space.paraskun.postman.security.session.AuthenticationSessionRepository;
@@ -20,19 +18,16 @@ import java.io.IOException;
 public class GoogleOAuth2AuthenticationFlow extends AbstractAuthenticationFlow<GoogleCredential> {
     private final GoogleAuthorizationCodeFlow codeFlow;
     private final CredentialHolderRepository<GoogleCredential> holderRepository;
-    private final CredentialHolderFactory<GoogleCredential> holderFactory;
 
     @Autowired
     public GoogleOAuth2AuthenticationFlow(
             AuthenticationSessionRepository repository,
             GoogleAuthorizationCodeFlow codeFlow,
-            CredentialHolderRepository<GoogleCredential> holderRepository,
-            CredentialHolderFactory<GoogleCredential> holderFactory)
-    {
+            CredentialHolderRepository<GoogleCredential> holderRepository
+    ) {
         super(repository);
         this.codeFlow = codeFlow;
         this.holderRepository = holderRepository;
-        this.holderFactory = holderFactory;
     }
 
     @Override
@@ -53,23 +48,19 @@ public class GoogleOAuth2AuthenticationFlow extends AbstractAuthenticationFlow<G
                 throw new IncompleteSetOfScopesException();
 
             String email = requestEmail(tokenResponse.getAccessToken());
-            CredentialHolder<GoogleCredential> holder =
-                    holderRepository.findCredentialHolderByCredentialIdentifier(email);
+            GoogleCredential credential = holderRepository.findCredentialByIdentifier(email);
 
-            if (holder == null) {
+            if (credential == null) {
                 if (tokenResponse.getRefreshToken() == null)
                     throw new RefreshTokenNotPresentException();
 
-                holder = holderFactory.create(new GoogleCredential(email, tokenResponse.getRefreshToken()));
-                holder = holderRepository.save(holder);
+                credential = new GoogleCredential(email, tokenResponse.getRefreshToken());
             } else
-                if (tokenResponse.getRefreshToken() != null) {
-                    holder.getCredential().setRefreshToken(tokenResponse.getRefreshToken());
-                    holder = holderRepository.save(holder);
-                }
+                if (tokenResponse.getRefreshToken() != null)
+                    credential.setRefreshToken(tokenResponse.getRefreshToken());
 
             session.getAuthenticationConsumer()
-                    .onAuthenticationSuccess(session.getState(), holder);
+                    .onAuthenticationSuccess(session.getState(), credential);
         } catch (IOException e) {
             session.getAuthenticationConsumer()
                     .onAuthenticationFailure(session.getState(), new AuthenticationException());

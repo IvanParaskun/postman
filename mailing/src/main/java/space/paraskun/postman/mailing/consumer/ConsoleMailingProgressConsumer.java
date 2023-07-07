@@ -14,8 +14,9 @@ public class ConsoleMailingProgressConsumer implements MailingProgressConsumer {
 		);
 	}
 
+
 	@Override
-	public void onFail(String state, MailingException exception) {
+	public void onFail(String state, Throwable exception) {
 		System.out.printf("Mailing fail:\n\tState: %s\n\tCause: %s\n\n", state, exception.toString());
 	}
 }
